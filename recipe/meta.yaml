@@ -1,7 +1,8 @@
 {% set version = "1.2.1" %}
 {% set build = 3 %}
 
-{% set processor = processor or 'cpu' %}
+{% set processor = "cpu" if cuda_compiler_version == "None" else "gpu" %}  # [linux64]
+{% set processor = "cpu" %}  # [not linux64]
 
 package:
   name: prismatic_split
@@ -22,8 +23,9 @@ build:
 
 requirements:
   build:
-    - {{ compiler('c') }}                
-    - {{ compiler('cxx') }}              
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - {{ compiler('cuda') }}  # [linux64 and cuda_compiler_version != "None"]
     - {{ cdt('libxext-devel') }}         # [linux]
     - {{ cdt('mesa-libgl-devel') }}      # [linux]
     - {{ cdt('mesa-dri-drivers') }}      # [linux]
@@ -68,8 +70,9 @@ outputs:
 
     requirements:
       build:
-        - {{ compiler('c') }}                
-        - {{ compiler('cxx') }}              
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - {{ compiler('cuda') }}  # [linux64 and cuda_compiler_version != "None"]
         - {{ cdt('libxext-devel') }}         # [linux]
         - {{ cdt('mesa-libgl-devel') }}      # [linux]
         - {{ cdt('mesa-dri-drivers') }}      # [linux]
@@ -105,8 +108,9 @@ outputs:
 
     requirements:
       build:
-        - {{ compiler('c') }}                
-        - {{ compiler('cxx') }}              
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - {{ compiler('cuda') }}  # [linux64 and cuda_compiler_version != "None"]
         - {{ cdt('libxext-devel') }}         # [linux]
         - {{ cdt('mesa-libgl-devel') }}      # [linux]
         - {{ cdt('mesa-dri-drivers') }}      # [linux]
@@ -146,8 +150,8 @@ outputs:
 
     requirements:
       build:
-        - {{ compiler('c') }}                
-        - {{ compiler('cxx') }}              
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
         - {{ cdt('libxext-devel') }}         # [linux]
         - {{ cdt('mesa-libgl-devel') }}      # [linux]
         - {{ cdt('mesa-dri-drivers') }}      # [linux]
