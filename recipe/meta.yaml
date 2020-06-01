@@ -1,5 +1,6 @@
 {% set version = "1.2.1" %}
-{% set build = 5 %}
+{% set prismatic_proc_version = "1.0.0" %}
+{% set build = 6 %}
 
 {% set processor = "cpu" if cuda_compiler_version == "None" else "gpu" %}  # [linux64]
 {% set processor = "cpu" %}  # [not linux64]
@@ -52,7 +53,8 @@ outputs:
         - {{ pin_subpackage('prismatic_cli', exact=True) }}
         - {{ pin_subpackage('prismatic_gui', exact=True) }}
         - {{ pin_subpackage('pyprismatic', exact=True) }}
-
+      run_constrained:
+        - prismatic_proc * {{ processor }}
     test:
       commands:
         - command -v prismatic-gui  # [linux]
@@ -61,6 +63,15 @@ outputs:
         - where prismatic  # [win]
         - python -c "import pyprismatic; pyprismatic.demo()"  # [(linux64 and cuda_compiler_version == "None") or not linux64]
         - python -c "import pyprismatic"  # [linux64 and cuda_compiler_version != "None"]
+
+  - name: prismatic_proc
+    version: {{ prismatic_proc_version }}
+    build:
+      number: 0
+      string: "{{ processor }}"
+    test:
+      commands:
+        - exit 0
 
   - name: prismatic_cli
     build:
@@ -93,6 +104,8 @@ outputs:
         - fftw
       ignore_run_exports:
         - boost-cpp
+      run_constrained:
+        - prismatic_proc * {{ processor }}
 
     test:
       source_files:
@@ -136,6 +149,8 @@ outputs:
         - qt
       ignore_run_exports:
         - boost-cpp
+      run_constrained:
+        - prismatic_proc * {{ processor }}
 
     test:
       commands:
@@ -183,12 +198,14 @@ outputs:
         - h5py
       ignore_run_exports:
         - boost
+      run_constrained:
+        - prismatic_proc * {{ processor }}
 
     test:
       commands:
         - python -c "import pyprismatic"  # [linux64 and cuda_compiler_version != "None"]
         - python -c "import pyprismatic; pyprismatic.demo()"  # [(linux64 and cuda_compiler_version == "None") or not linux64]
-        
+
 about:
   home: http://prism-em.com/
   license: GPL-3.0-only
