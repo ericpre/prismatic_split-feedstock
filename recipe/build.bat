@@ -11,6 +11,8 @@ echo cli is %cli%, gui is %gui% and gpu is %gpu%
 echo CUDA_HOME: %CUDA_HOME%
 echo CUDA_PATH: %CUDA_PATH%
 
+set "CUDA_TOOLKIT_ROOT_DIR=%CUDA_PATH:\=/%"
+
 set MENU_DIR=%PREFIX%\Menu
 if not exist %MENU_DIR% mkdir %MENU_DIR%
 
@@ -31,6 +33,7 @@ cmake -G "NMake Makefiles" ^
       -D PRISMATIC_ENABLE_DOUBLE_PRECISION=0 ^
       -D HDF5_DIR=%LIBRARY_PREFIX%\cmake\hdf5 ^
       -D Qt5Widgets_DIR=%LIBRARY_PREFIX%\lib\cmake\Qt5Widgets ^
+      -D CUDA_TOOLKIT_ROOT_DIR="%CUDA_TOOLKIT_ROOT_DIR%" ^
       -D CMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% ^
       -D CMAKE_PREFIX_PATH=%LIBRARY_PREFIX% ^
       -D CMAKE_BUILD_TYPE=Release ^
@@ -58,6 +61,7 @@ cmake -G "NMake Makefiles" ^
       -D HDF5_DIR=%LIBRARY_PREFIX%\cmake\hdf5 ^
       -D Qt5Widgets_DIR=%LIBRARY_PREFIX%\lib\cmake\Qt5Widgets ^
       -D OUTPUT_NAME="prismatic-double" ^
+      -D CUDA_TOOLKIT_ROOT_DIR="%CUDA_TOOLKIT_ROOT_DIR%" ^
       -D CMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% ^
       -D CMAKE_PREFIX_PATH=%LIBRARY_PREFIX% ^
       -D CMAKE_BUILD_TYPE=Release ^
